@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Exportar Produtos{% endblock %}
+{% block content %}
+<h1 class="text-center">Lista de Produtos</h1>
+<table class="table table-striped table-hover">
+  <thead class="thead-dark">
+    <tr>
+      <th>ID</th>
+      <th>Nome</th>
+      <th>Preço</th>
+      <th>Quantidade</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for prod in produtos %}
+    <tr>
+      <td>{{ prod['id'] }}</td>
+      <td>{{ prod['nome'] }}</td>
+      <td>{{ prod['preco'] if prod['preco'] is defined else 'N/A' }}</td>
+      <td>{{ prod['quantidade'] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div class="text-center">
+  <button class="btn btn-success" onclick="exportCSV()">Exportar para CSV</button>
+</div>
+<script>
+function exportCSV() {
+  window.location.href = "{{ url_for('exportar') }}";
+}
+</script>
+{% endblock %}

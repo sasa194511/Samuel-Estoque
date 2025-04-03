@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% block title %}Gerenciar Produtos{% endblock %}
+{% block extra_head %}
+<style>
+  .form-control {
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+  .form-control:focus {
+    box-shadow: 0 0 10px rgba(0,123,255,0.5);
+    border-color: #007bff;
+  }
+  .input-group-text {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    color: #fff;
+    border: none;
+  }
+  .btn-success {
+    background: linear-gradient(45deg, #28a745, #218838);
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+  .btn-success:hover {
+    background: linear-gradient(45deg, #218838, #28a745);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  .btn-info {
+    background: linear-gradient(45deg, #17a2b8, #138496);
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+  .btn-info:hover {
+    background: linear-gradient(45deg, #138496, #17a2b8);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  .btn-danger {
+    background: linear-gradient(45deg, #dc3545, #c82333);
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+  .btn-danger:hover {
+    background: linear-gradient(45deg, #c82333, #dc3545);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  .table thead th {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    color: #fff;
+    border: none;
+  }
+  .table tbody tr:hover {
+    background-color: #f1f3f5;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="animate__animated animate__fadeInUp">
+  <h2 class="text-center mb-4">Cadastrar/Atualizar Produto</h2>
+  <form method="POST" action="{{ url_for('produtos') }}" class="mb-4">
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label for="codigo">Código:</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-barcode"></i></span>
+          </div>
+          <input type="text" name="codigo" id="codigo" class="form-control" placeholder="Digite o código" required>
+        </div>
+      </div>
+      <div class="form-group col-md-4">
+        <label for="nome">Nome:</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-box"></i></span>
+          </div>
+          <input type="text" name="nome" id="nome" class="form-control" placeholder="Digite o nome" required>
+        </div>
+      </div>
+      <div class="form-group col-md-4">
+        <label for="quantidade">Quantidade:</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
+          </div>
+          <input type="number" name="quantidade" id="quantidade" class="form-control" placeholder="Digite a quantidade" min="0" required>
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-success">Adicionar Produto</button>
+  </form>
+  <hr>
+  <h3 class="text-center mb-4">Produtos Cadastrados</h3>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover mt-3">
+      <thead class="thead-dark">
+        <tr>
+          <th>ID</th>
+          <th>Código</th>
+          <th>Nome</th>
+          <th>Quantidade</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for produto in produtos %}
+        <tr class="animate__animated animate__fadeIn" style="transition: all 0.3s ease;">
+          <td>{{ produto['id'] }}</td>
+          <td>{{ produto['codigo'] }}</td>
+          <td>{{ produto['nome'] }}</td>
+          <td>{{ produto['quantidade'] }}</td>
+          <td>
+            <form method="POST" action="{{ url_for('atualizar_produto') }}" class="d-inline-block mr-2">
+              <input type="hidden" name="codigo" value="{{ produto['codigo'] }}">
+              <input type="text" name="nome" value="{{ produto['nome'] }}" class="form-control d-inline-block" style="width: 150px;" required>
+              <input type="number" name="quantidade" value="{{ produto['quantidade'] }}" class="form-control d-inline-block" style="width: 100px;" min="0" required>
+              <button type="submit" class="btn btn-info btn-sm">Atualizar</button>
+            </form>
+            <a href="{{ url_for('excluir_produto', codigo=produto['codigo']) }}" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este produto?');">Excluir</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

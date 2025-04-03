@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% block title %}Movimentações{% endblock %}
+{% block content %}
+<div class="container">
+  <h2>Registrar Movimentação</h2>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+  <form method="POST" action="{{ url_for('movimentacoes') }}" class="form">
+    <div class="form-group">
+      <label for="codigo">Código do Produto:</label>
+      <input type="text" name="codigo" id="codigo" placeholder="Digite o código" required>
+    </div>
+    <div class="form-group">
+      <label for="tipo">Tipo:</label>
+      <select name="tipo" id="tipo" required>
+        <option value="" disabled selected>Selecione o tipo</option>
+        <option value="Entrada">Entrada</option>
+        <option value="Saída">Saída</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="quantidade">Quantidade:</label>
+      <input type="number" name="quantidade" id="quantidade" min="1" placeholder="Digite a quantidade" required>
+    </div>
+    <div class="form-group">
+      <label for="observacao">Observação:</label>
+      <input type="text" name="observacao" id="observacao" placeholder="Digite uma observação (opcional)">
+    </div>
+    <div class="form-group">
+      <button type="submit">Registrar</button>
+    </div>
+  </form>
+
+  <hr>
+
+  <h3>Histórico de Movimentações</h3>
+  <table class="movement-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Código</th>
+        <th>Tipo</th>
+        <th>Quantidade</th>
+        <th>Data</th>
+        <th>Observação</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for mov in movimentacoes %}
+      <tr>
+        <td>{{ mov['id'] }}</td>
+        <td>{{ mov['codigo'] }}</td>
+        <td class="{{ 'entrada' if mov['tipo'] == 'Entrada' else 'saida' }}">{{ mov['tipo'] }}</td>
+        <td>{{ mov['quantidade'] }}</td>
+        <td>{{ mov['data'] }}</td>
+        <td>{{ mov['observacao'] or '-' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  h2, h3 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  .flash-success {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    text-align: center;
+  }
+
+  .flash-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    text-align: center;
+  }
+
+  .flash-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    text-align: center;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  label {
+    margin-bottom: 5px;
+    color: #555;
+    font-weight: bold;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+  }
+
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  select:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+
+  button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid #ddd;
+    margin: 30px 0;
+  }
+
+  .movement-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+  }
+
+  .movement-table th,
+  .movement-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .movement-table th {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .movement-table tr:hover {
+    background-color: #f5f5f5;
+  }
+
+  .entrada {
+    color: #28a745; /* Verde para Entrada */
+    font-weight: bold;
+  }
+
+  .saida {
+    color: #dc3545; /* Vermelho para Saída */
+    font-weight: bold;
+  }
+</style>
+{% endblock %}
